@@ -72,14 +72,10 @@ public class GuardianTask extends BukkitRunnable {
         if(event.getDamager().getPersistentDataContainer().has(Keys.GUARDIAN_KEY, PersistentDataType.STRING)){
             getZombie().setTarget(Bukkit.getPlayer(event.getDamager().getPersistentDataContainer().get(Keys.GUARDIAN_KEY, PersistentDataType.STRING)));
         } else {
-            if (!(((Projectile) event.getDamager()).getShooter() instanceof LivingEntity)) return;
             if (!(event.getDamager() instanceof LivingEntity)) return;
-
-            getZombie().setTarget(event.getDamager() instanceof Projectile
-                    ?
-                    (LivingEntity) ((Projectile) event.getDamager()).getShooter()
-                    :
-                    (LivingEntity) event.getDamager());
+            if (!(event.getDamager() instanceof Projectile)) return;
+            Projectile projectileDamager = (Projectile) event.getDamager();
+            getZombie().setTarget((LivingEntity) projectileDamager.getShooter());
         }
     }
 }
