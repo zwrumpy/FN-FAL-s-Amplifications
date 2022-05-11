@@ -4,7 +4,6 @@ import io.github.thebusybiscuit.slimefun4.api.items.ItemGroup;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack;
 import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
-import lombok.Getter;
 import ne.fnfal113.fnamplifications.FNAmplifications;
 import ne.fnfal113.fnamplifications.gems.events.GuardianSpawnEvent;
 import ne.fnfal113.fnamplifications.gems.handlers.GemUpgrade;
@@ -37,44 +36,33 @@ import java.util.concurrent.ThreadLocalRandom;
 @SuppressWarnings("ConstantConditions")
 public class GuardianGem extends AbstractGem implements OnDamageHandler, GemUpgrade {
 
-    @Getter
-    private final int chance;
-
     private final Map<UUID, Zombie> entityUUIDMap = new HashMap<>();
     private final Map<UUID, BukkitTask> runnableMap = new HashMap<>();
 
     public GuardianGem(ItemGroup itemGroup, SlimefunItemStack item, RecipeType recipeType, ItemStack[] recipe) {
-        super(itemGroup, item, recipeType, recipe, 8);
-
-        this.chance = FNAmplifications.getInstance().getConfigManager().getValueById(this.getId() + "-percent-chance");
+        super(itemGroup, item, recipeType, recipe, 11);
     }
 
     @Override
-    public void onDrag(InventoryClickEvent event, Player player){
-        if(event.getCursor() == null){
-            return;
-        }
-
-        ItemStack currentItem = event.getCurrentItem();
-
-        SlimefunItem slimefunItem = SlimefunItem.getByItem(event.getCursor());
-
-        if(slimefunItem != null && currentItem != null) {
-            if ((WeaponArmorEnum.CHESTPLATE.isTagged(currentItem.getType()))) {
-                if(isUpgradeGem(event.getCursor(), this.getId())) {
-                    upgradeGem(slimefunItem, currentItem, event, player, this.getId());
-                } else {
-                    new Gem(slimefunItem, currentItem, player).onDrag(event, false);
-                }
+    @SuppressWarnings("ConstantConditions")
+    public void onDrag(InventoryClickEvent event, Player player, SlimefunItem slimefunItem, ItemStack currentItem){
+        if ((WeaponArmorEnum.CHESTPLATE.isTagged(currentItem.getType()))) {
+            if(isUpgradeGem(event.getCursor(), this.getId())) {
+                upgradeGem(slimefunItem, currentItem, event, player, this.getId());
             } else {
-                player.sendMessage(Utils.colorTranslator("&eInvalid item to socket! Gem works on chestplate only"));
+                new Gem(slimefunItem, currentItem, player).onDrag(event, false);
             }
+        } else {
+            player.sendMessage(Utils.colorTranslator("&eInvalid item to socket! Gem works on chestplate only"));
         }
     }
 
     @Override
     public void onDamage(EntityDamageByEntityEvent event, ItemStack itemStack){
         if(event.isCancelled()){
+            return;
+        }
+        if(!(event.getEntity() instanceof Player)){
             return;
         }
 

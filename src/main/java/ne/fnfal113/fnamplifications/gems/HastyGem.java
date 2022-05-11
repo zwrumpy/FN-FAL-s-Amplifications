@@ -5,8 +5,6 @@ import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack;
 import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
 import io.github.thebusybiscuit.slimefun4.utils.tags.SlimefunTag;
-import lombok.Getter;
-import ne.fnfal113.fnamplifications.FNAmplifications;
 import ne.fnfal113.fnamplifications.gems.implementation.Gem;
 import ne.fnfal113.fnamplifications.gems.abstracts.AbstractGem;
 import ne.fnfal113.fnamplifications.utils.WeaponArmorEnum;
@@ -26,32 +24,17 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class HastyGem extends AbstractGem implements OnBlockBreakHandler {
 
-    @Getter
-    private final int chance;
-
     public HastyGem(ItemGroup itemGroup, SlimefunItemStack item, RecipeType recipeType, ItemStack[] recipe) {
         super(itemGroup, item, recipeType, recipe, 16);
-
-        this.chance = FNAmplifications.getInstance().getConfigManager().getValueById(this.getId() + "-percent-chance");
     }
 
     @Override
-    public void onDrag(InventoryClickEvent event, Player player){
-        if(event.getCursor() == null){
-            return;
-        }
-
-        ItemStack currentItem = event.getCurrentItem();
-
-        SlimefunItem slimefunItem = SlimefunItem.getByItem(event.getCursor());
-
-        if(slimefunItem != null && currentItem != null) {
-            if (WeaponArmorEnum.AXES.isTagged(currentItem.getType()) || WeaponArmorEnum.SHOVELS.isTagged(currentItem.getType())
-                    || WeaponArmorEnum.PICKAXE.isTagged(currentItem.getType())) {
-                new Gem(slimefunItem, currentItem, player).onDrag(event, false);
-            } else {
-                player.sendMessage(Utils.colorTranslator("&eInvalid item to socket! Gem works on shovels, pickaxes and axes only"));
-            }
+    public void onDrag(InventoryClickEvent event, Player player, SlimefunItem slimefunItem, ItemStack currentItem){
+        if (WeaponArmorEnum.AXES.isTagged(currentItem.getType()) || WeaponArmorEnum.SHOVELS.isTagged(currentItem.getType())
+                || WeaponArmorEnum.PICKAXE.isTagged(currentItem.getType())) {
+            new Gem(slimefunItem, currentItem, player).onDrag(event, false);
+        } else {
+            player.sendMessage(Utils.colorTranslator("&eInvalid item to socket! Gem works on shovels, pickaxes and axes only"));
         }
     }
 

@@ -4,7 +4,6 @@ import io.github.thebusybiscuit.slimefun4.api.items.ItemGroup;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack;
 import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
-import lombok.Getter;
 import ne.fnfal113.fnamplifications.FNAmplifications;
 import ne.fnfal113.fnamplifications.gems.abstracts.AbstractGem;
 import ne.fnfal113.fnamplifications.gems.handlers.GemUpgrade;
@@ -26,44 +25,30 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class SmokeCriminalGem extends AbstractGem implements OnDamageHandler, GemUpgrade {
 
-    @Getter
-    private final int chance;
-
     public SmokeCriminalGem(ItemGroup itemGroup, SlimefunItemStack item, RecipeType recipeType, ItemStack[] recipe) {
         super(itemGroup, item, recipeType, recipe, 14);
-
-        this.chance = FNAmplifications.getInstance().getConfigManager().getValueById(this.getId() + "-percent-chance");
     }
 
     @Override
-    public void onDrag(InventoryClickEvent event, Player player) {
-        if(event.getCursor() == null){
-            return;
-        }
-
-        ItemStack currentItem = event.getCurrentItem();
-
-        SlimefunItem slimefunItem = SlimefunItem.getByItem(event.getCursor());
-
-        if(slimefunItem != null && currentItem != null) {
-            if (WeaponArmorEnum.BOOTS.isTagged(currentItem.getType())) {
-                if(isUpgradeGem(event.getCursor(), this.getId())) {
-                    upgradeGem(slimefunItem, currentItem, event, player, this.getId());
-                } else {
-                    new Gem(slimefunItem, currentItem, player).onDrag(event, false);
-                }
+    @SuppressWarnings("ConstantConditions")
+    public void onDrag(InventoryClickEvent event, Player player, SlimefunItem slimefunItem, ItemStack currentItem){
+        if (WeaponArmorEnum.BOOTS.isTagged(currentItem.getType())) {
+            if(isUpgradeGem(event.getCursor(), this.getId())) {
+                upgradeGem(slimefunItem, currentItem, event, player, this.getId());
             } else {
-                player.sendMessage(Utils.colorTranslator("&eInvalid item to socket! Gem works on boots only"));
+                new Gem(slimefunItem, currentItem, player).onDrag(event, false);
             }
+        } else {
+            player.sendMessage(Utils.colorTranslator("&eInvalid item to socket! Gem works on boots only"));
         }
     }
 
     @Override
     public void onDamage(EntityDamageByEntityEvent event, ItemStack itemStack) {
-        if(!(event.getEntity() instanceof Player)){
+        if(event.isCancelled()){
             return;
         }
-        if(event.isCancelled()){
+        if(!(event.getEntity() instanceof Player)){
             return;
         }
 
@@ -73,9 +58,10 @@ public class SmokeCriminalGem extends AbstractGem implements OnDamageHandler, Ge
             int victimMaxHealth = (int) Objects.requireNonNull(victim.getAttribute(Attribute.GENERIC_MAX_HEALTH)).getValue();
 
             Bukkit.getScheduler().runTaskLater(FNAmplifications.getInstance(), () -> { // delay getting the actual hp of the victim
-                if(victim.getHealth() < victimMaxHealth * 0.30){
+                if(victim.getHealth() <= victimMaxHealth * 0.30){
                     sendGemMessage(victim, this.getItemName());
                     victim.setNoDamageTicks(100);
+
                     AtomicInteger i = new AtomicInteger(0);
 
                     Bukkit.getScheduler().runTaskTimer(FNAmplifications.getInstance(), task ->{
