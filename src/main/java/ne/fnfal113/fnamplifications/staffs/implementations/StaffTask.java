@@ -14,7 +14,7 @@ import org.bukkit.persistence.PersistentDataType;
 
 import java.util.Objects;
 
-public class MainStaff {
+public class StaffTask {
 
     @Getter
     private final NamespacedKey storageKey;
@@ -22,7 +22,7 @@ public class MainStaff {
     private final String id;
 
     @SneakyThrows
-    public MainStaff(NamespacedKey storageKey, String id) {
+    public StaffTask(NamespacedKey storageKey, String id) {
         this.storageKey = storageKey;
         this.id = id;
     }
@@ -35,12 +35,12 @@ public class MainStaff {
      */
     public void updateMeta(ItemStack item, ItemMeta meta, Player player){
         PersistentDataContainer max_Uses = meta.getPersistentDataContainer();
-        int uses_Left = max_Uses.getOrDefault(getStorageKey(), PersistentDataType.INTEGER, FNAmplifications.getInstance().getConfigManager().getValueById(this.getId(), "max-uses"));
+        int uses_Left = max_Uses.getOrDefault(getStorageKey(), PersistentDataType.INTEGER, FNAmplifications.getInstance().getConfigManager().getCustomConfig("staffs-settings").getInt(this.getId() + "." + "max-uses"));
         int decrement = uses_Left - 1;
 
         if(decrement > 0) { // update the staff uses left the lore
             max_Uses.set(getStorageKey(), PersistentDataType.INTEGER, decrement);
-            Utils.updateValueByPdc(item, meta, String.valueOf(decrement), "Uses: ", "&e", "", " left");
+            Utils.setLoreByPdc(item, meta, String.valueOf(decrement), "Uses: ", "&e", "", " left");
         } else { // destroy the staff when it reached the max uses
             player.getInventory().setItemInMainHand(null);
             player.sendMessage(Utils.colorTranslator(meta.getDisplayName() + " &d&lhas reached max uses!"));

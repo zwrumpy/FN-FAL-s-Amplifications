@@ -26,7 +26,8 @@ public class PlayerJoinLister implements Listener {
             return;
         }
 
-        if(players.contains(player.getUniqueId())){ // only send once when player joins fresh after server restart
+        // only send once when player joins fresh after server restart
+        if(players.contains(player.getUniqueId())){
            return;
         }
 
@@ -35,7 +36,7 @@ public class PlayerJoinLister implements Listener {
             for(String string : getChangelog()) {
                 player.sendMessage(string);
             }
-        }, 42L);
+        }, 45L);
 
     }
 
@@ -45,16 +46,20 @@ public class PlayerJoinLister implements Listener {
                 Utils.colorTranslator("&e&lFN &c&lAmpli&b&lfications &r&e" + FNAmplifications.getInstance().getDescription().getVersion()),
                 Utils.colorTranslator("&fChangelog"),
                 "",
-                Utils.colorTranslator("&d&l• &r&d&lAdded Loot Gem!"),
-                Utils.colorTranslator("  &bA chance to steal money from your foes!"),
-                Utils.colorTranslator("  &bGem only gets added if the server"),
-                Utils.colorTranslator("  &beconomy plugin utilizes VaultAPI"),
-                Utils.colorTranslator("&d&l• &r&d&lAdded &r&dVault integration (API)"),
-                Utils.colorTranslator("&d&l• &r&dReadjusted FN Armor set progress chance trigger (balancing)"),
-                Utils.colorTranslator("&d&l• &r&dReadjusted FN Solar Gen recipes (balancing)"),
-                Utils.colorTranslator(""),
-                Utils.colorTranslator("&ehttps://fnfal113.tech/pluginStats"),
-                Utils.colorTranslator("&ehttps://github.com/FN-FAL113/"),
+                Utils.colorTranslator("&eChanges"),
+                Utils.colorTranslator("  &d- Fixed guardian gem baby zombie position, should stay right beside the player regardless the facing direction"),
+                Utils.colorTranslator("&eCode Changes"),
+                Utils.colorTranslator("  &d- Rewritten file configuration handling"),
+                Utils.colorTranslator("  &d- Refactored util pdc types (for future use)"),
+                Utils.colorTranslator("  &d- Fixed unregistered permission node: fngear.levelupgears"),
+                Utils.colorTranslator("  &d- Code chores"),
+                "",
+                Utils.colorTranslator("  &fNote: Addon requires Slimefun Dev 1031+ (Previously Dev 980+) as of Build 83"),
+                "",
+                Utils.colorTranslator("&eChangelog notification can be disabled in config.yml"),
+                "",
+                Utils.colorTranslator("&eYou may visit this website for the fn items wiki:"),
+                Utils.colorTranslator("&e&nhttps://fnfal113.tech/fnAmpItems"),
                 "||---------------------------------------------------||"
         );
     }

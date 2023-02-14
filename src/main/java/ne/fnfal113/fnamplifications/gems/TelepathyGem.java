@@ -5,15 +5,14 @@ import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack;
 import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
 import me.mrCookieSlime.Slimefun.api.BlockStorage;
-import ne.fnfal113.fnamplifications.gems.implementation.Gem;
 import ne.fnfal113.fnamplifications.gems.abstracts.AbstractGem;
 import ne.fnfal113.fnamplifications.utils.WeaponArmorEnum;
 import ne.fnfal113.fnamplifications.gems.handlers.OnBlockBreakHandler;
 import ne.fnfal113.fnamplifications.utils.Utils;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.Collection;
@@ -26,21 +25,25 @@ public class TelepathyGem extends AbstractGem implements OnBlockBreakHandler {
     }
 
     @Override
-    public void onDrag(InventoryClickEvent event, Player player, SlimefunItem slimefunItem, ItemStack currentItem){
+    public void onDrag(Player player, SlimefunItem gem, ItemStack gemItem, ItemStack currentItem){
         if (WeaponArmorEnum.PICKAXE.isTagged(currentItem.getType()) || WeaponArmorEnum.AXES.isTagged(currentItem.getType())) {
-            new Gem(slimefunItem, currentItem, player).onDrag(event, false);
+            bindGem(gem, currentItem, player, false);
         } else {
             player.sendMessage(Utils.colorTranslator("&eInvalid item to socket! Gem works on pickaxes and axes only"));
         }
     }
 
     @Override
-    public void onBlockBreak(BlockBreakEvent event, Player player){
+    public void onBlockBreak(BlockBreakEvent event, Player player, ItemStack itemStack){
         if (event.isCancelled()){
             return;
         }
 
         Block block = event.getBlock();
+
+        if(block.getType() == Material.LADDER){ // dupe fix against auto ladder
+            return;
+        }
 
         Optional<SlimefunItem> sfItem = Optional.ofNullable(BlockStorage.check(block));
 

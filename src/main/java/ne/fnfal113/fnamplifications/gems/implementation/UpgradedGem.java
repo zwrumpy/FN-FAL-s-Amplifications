@@ -2,14 +2,13 @@ package ne.fnfal113.fnamplifications.gems.implementation;
 
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
 import lombok.Getter;
-import ne.fnfal113.fnamplifications.FNAmplifications;
+import ne.fnfal113.fnamplifications.utils.Keys;
 import ne.fnfal113.fnamplifications.utils.Utils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
@@ -25,10 +24,10 @@ public class UpgradedGem extends Gem {
     public UpgradedGem(SlimefunItem sfItem, ItemStack itemToSocket, Player p){
         super(sfItem, itemToSocket, p);
 
-        this.key = new NamespacedKey(FNAmplifications.getInstance(), sfItem.getId().toLowerCase() + "_gem_tier");
+        this.key = Keys.createKey(sfItem.getId().toLowerCase() + "_gem_tier");
     }
 
-    public void upgradeExistingGem(InventoryClickEvent event, ItemStack gemItem, int gemTier){
+    public void upgradeExistingGem(ItemStack gemItem, int gemTier){
         ItemMeta meta = getItemStackToSocket().getItemMeta();
         PersistentDataContainer container = meta.getPersistentDataContainer();
         int itemTier = container.getOrDefault(getKey(), PersistentDataType.INTEGER, 4);
@@ -46,8 +45,6 @@ public class UpgradedGem extends Gem {
         } else {
             getPlayer().sendMessage(Utils.colorTranslator("&eYou do not have a similar gem that can be upgraded!"));
         }
-
-        event.setCancelled(true);
     }
 
     public void upgradeItem(int itemTier, String gemDisplayName){

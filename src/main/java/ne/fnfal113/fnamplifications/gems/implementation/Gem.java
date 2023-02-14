@@ -2,7 +2,6 @@ package ne.fnfal113.fnamplifications.gems.implementation;
 
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
 import lombok.Getter;
-import ne.fnfal113.fnamplifications.FNAmplifications;
 import ne.fnfal113.fnamplifications.utils.Keys;
 import ne.fnfal113.fnamplifications.utils.Utils;
 import org.bukkit.ChatColor;
@@ -10,7 +9,6 @@ import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
@@ -46,11 +44,11 @@ public class Gem {
         this.sfItemName = sfItem.getItemName();
         this.gemID = sfItem.getId();
         this.player = p;
-        this.key1 = new NamespacedKey(FNAmplifications.getInstance(), sfItem.getId().toLowerCase());
-        this.key2 = new NamespacedKey(FNAmplifications.getInstance(), itemToSocket.getType().toString().toLowerCase() + "_socket_amount");
+        this.key1 = Keys.createKey(sfItem.getId().toLowerCase());
+        this.key2 = Keys.createKey(itemToSocket.getType().toString().toLowerCase() + "_socket_amount");
     }
 
-    public void onDrag(InventoryClickEvent event, boolean retaliateWeapon){
+    public void onDrag(boolean retaliateWeapon){
         ItemMeta meta = getItemStackToSocket().getItemMeta();
         PersistentDataContainer container = meta.getPersistentDataContainer();
 
@@ -69,7 +67,6 @@ public class Gem {
             getPlayer().sendMessage(Utils.colorTranslator("&eOnly 5 gems per item is allowed!"));
             getPlayer().playSound(getPlayer().getLocation(), Sound.ENTITY_BLAZE_HURT, 1.0F, 1.0F);
         }
-        event.setCancelled(true);
     }
 
     public void socketItem(){
@@ -123,8 +120,7 @@ public class Gem {
      * @return the amount of gem inside the itemstack if there are any
      */
     public int checkGemAmount(PersistentDataContainer pdc, ItemStack itemStack){
-        return pdc.getOrDefault(
-                new NamespacedKey(FNAmplifications.getInstance(), itemStack.getType().toString().toLowerCase() + "_socket_amount"),
+        return pdc.getOrDefault(Keys.createKey(itemStack.getType().toString().toLowerCase() + "_socket_amount"),
                 PersistentDataType.INTEGER, 0);
     }
 

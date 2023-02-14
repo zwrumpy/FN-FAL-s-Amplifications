@@ -71,6 +71,12 @@ public class FNAmpItems {
             new CustomItemStack(Material.EMERALD_BLOCK,
             "&eFN Material Generators"));
 
+    public static final SubItemGroup MATERIAL_GENERATORS_UPGRADES = new SubItemGroup(
+            new NamespacedKey(FNAmplifications.getInstance(), "MATERIAL_GENERATORS_UPGRADES"),
+            FN_MAIN_GROUP,
+            new CustomItemStack(Material.GOLD_BLOCK,
+                    "&eFN Material Generators Upgrades"));
+
     public static final SubItemGroup SOLAR_GENERATORS = new SubItemGroup(
             new NamespacedKey(FNAmplifications.getInstance(), "SOLAR_GENERATORS"),
             FN_MAIN_GROUP,
@@ -554,6 +560,30 @@ public class FNAmpItems {
         }
     }
 
+    public static final SlimefunItemStack FN_MAT_GEN_UPGRADES_REPAIR_ITEM = new SlimefunItemStack(
+            "FN_MAT_GEN_UPGRADES_REPAIR_ITEM",
+            Material.BLACK_DYE,
+            "&fFN Mat Gen Repair Item",
+            "&6Repairs or add durability",
+            "",
+            "&e+20 durability",
+            "",
+            "&aRight click on a material generator",
+            "&d&oFN Material Generators Upgrades"
+    );
+
+    public static final SlimefunItemStack FN_MAT_GEN_UPGRADES_FAST_PRODUCE = new SlimefunItemStack(
+            "FN_MAT_GEN_UPGRADES_FAST_PRODUCE",
+            Material.YELLOW_DYE,
+            "&fFN Mat Gen Fast Produce",
+            "&6Faster production",
+            "",
+            "&e+1.75x Mat gen speed for 30 minutes",
+            "",
+            "&aRight click on a material generator",
+            "&d&oFN Material Generators Upgrades"
+    );
+
     public static final SlimefunItemStack FN_FAL_GENERATOR_TIER1 = new SlimefunItemStack(
             "FN_FAL_GENERATOR_TIER1",
             "6d2822cedb3abd579d6dfa2966c1433c3c36cb9732e2c23ec0cc81daedd4403b",
@@ -766,7 +796,7 @@ public class FNAmpItems {
             "",
             "&d&oFN Machinery",
             LoreBuilder.machine(MachineTier.END_GAME, MachineType.MACHINE),
-            LoreBuilder.speed(2),
+            LoreBuilder.speed(4),
             LoreBuilder.powerPerSecond(672));
 
     public static final SlimefunItemStack FN_FAL_DOWNGRADER = new SlimefunItemStack(
@@ -1256,6 +1286,12 @@ public class FNAmpItems {
             "FN_GEM_UPGRADER",
             Material.SMITHING_TABLE,
             "&dFN Gem Upgrader"
+    );
+
+    public static final SlimefunItemStack FN_GEM_DOWNGRADER = new SlimefunItemStack(
+            "FN_GEM_DOWNGRADER",
+            Material.STONECUTTER,
+            "&dFN Gem Downgrader"
     );
 
     public static final SlimefunItemStack FN_MAGIC_ALTAR = new SlimefunItemStack(
@@ -1829,10 +1865,10 @@ public class FNAmpItems {
             Material.EMERALD,
             "&cRetaliate Gem",
             "",
-            "&eAllows your weapons to return back to ",
-            "&eyou after throwing and hitting an object",
-            "&eor entity, weapon must have any of these",
-            "&egems bound to it before binding this gem:",
+            "&eAllows your weapons to return back to",
+            "&eyou after throwing it despite the distance.",
+            "&eThis gem requires throwable weapon gem",
+            "&efrom which one below:",
             "&e- Damnation Gem",
             "&e- Tri-Sword Gem",
             "&e- Axe Throwie Gem",
@@ -2356,6 +2392,54 @@ public class FNAmpItems {
             "&dto bind this gem"
     );
 
+    public static final SlimefunItemStack FN_GEM_SHOCKWAVE = new SlimefunItemStack(
+            "FN_GEM_SHOCKWAVE",
+            Material.EMERALD,
+            "&cShockwave Gem",
+            "",
+            "&eA chance to deal shockwave damage",
+            "&eto all enemies in a 8 block radius",
+            "&eand bounce them off the ground!",
+            "",
+            "&c◢◤◢◤◢◤ Tiers &6◥◣◥◣◥◣",
+            "&6⨳ Tier I: " + "&e%",
+            "&6  - Damage: &f3",
+            "&6⨳ Tier II: " + "&e%",
+            "&6  - Damage: &f6",
+            "&6⨳ Tier III: " + "&e%",
+            "&6  - Damage: &f9",
+            "&6⨳ Tier IV: " + "&e%",
+            "&6  - Damage: &f12",
+            "&c◢◤◢◤◢◤◢◤◢◤◢&6◣◥◣◥◣◥◣◥◣◥◣",
+            "",
+            "&dDrag and drop on any armor type",
+            "&dto bind this gem"
+    );
+
+    public static final SlimefunItemStack FN_GEM_BERSERK = new SlimefunItemStack(
+            "FN_GEM_BERSERK",
+            Material.EMERALD,
+            "&cBerserk Gem",
+            "",
+            "&eA chance to deal more damage against",
+            "&eenemies when your health is below 30%.",
+            "&eHigher tier gem, much deadly!",
+            "",
+            "&c◢◤◢◤◢◤ Tiers &6◥◣◥◣◥◣",
+            "&6⨳ Tier I: " + "&e%",
+            "&6  - Damage: &f+6% base damage",
+            "&6⨳ Tier II: " + "&e%",
+            "&6  - Damage: &f+12% base damage",
+            "&6⨳ Tier III: " + "&e%",
+            "&6  - Damage: &f+18% base damage",
+            "&6⨳ Tier IV: " + "&e%",
+            "&6  - Damage: &f+30% base damage",
+            "&c◢◤◢◤◢◤◢◤◢◤◢&6◣◥◣◥◣◥◣◥◣◥◣",
+            "",
+            "&dDrag and drop on sword or axe",
+            "&dto bind this gem"
+    );
+
     public static final SlimefunItemStack FN_GEM_UPGRADES_DISPLAY_ITEM = new SlimefunItemStack(
             "FN_GEM_UPGRADES_DISPLAY_ITEM",
             PlayerHead.getItemStack(PlayerSkin.fromHashCode("d3623521c8111ad29e9dcf7acc56085a9ab07da732d1518976aee61d0b3e3bd6")),
@@ -2364,6 +2448,16 @@ public class FNAmpItems {
             "&dClick this item to know how to upgrade",
             "&dgems and what recipe are needed in the",
             "&dFN Gem Upgrader Multiblock"
+    );
+
+    public static final SlimefunItemStack FN_GEM_DOWNGRADES_DISPLAY_ITEM = new SlimefunItemStack(
+            "FN_GEM_DOWNGRADE_DISPLAY_ITEM",
+            PlayerHead.getItemStack(PlayerSkin.fromHashCode("36161daa3589ec9c8187459ac36fd4dd2646c040678d3bfacb72a2210c6c801c")),
+            "&bGem Tier Downgrades",
+            "",
+            "&dClick this item to know how to downgrade",
+            "&dgems and what recipe are needed in the",
+            "&dFN Gem Downgrader Multiblock"
     );
 
     public static final SlimefunItemStack FN_GEM_FINE_JASPER_CRAFTING = new SlimefunItemStack(
@@ -2386,6 +2480,36 @@ public class FNAmpItems {
             "",
             "&dShift right click to flip slab, bisected",
             "&dor orientable blocks &f(Slabs, stairs, etc)"
+    );
+
+    public static final SlimefunItemStack FN_AUTO_LADDER = new SlimefunItemStack(
+            "FN_AUTO_LADDER",
+            Material.LADDER,
+            "&cFN's Auto Ladder",
+            "",
+            "&dAutomatically places a ladder from top to",
+            "&dbottom with a max distance of 8 blocks"
+    );
+
+    public static final SlimefunItemStack FN_ORIENT_PEARL = new SlimefunItemStack(
+            "FN_ORIENT_PEARL",
+            Material.ENDER_PEARL,
+            "&cFN's Orient Pearl",
+            "",
+            "&dAn ender pearl that teleports",
+            "&dthe player together with the",
+            "&dmounted entity (Horse, etc)"
+    );
+
+    public static final SlimefunItemStack FN_THROWABLE_TORCH = new SlimefunItemStack(
+            "FN_THROWABLE_TORCH",
+            Material.TORCH,
+            "&cFN's Throwable Torch",
+            "",
+            "&dRight click to throw in the target",
+            "&ddirection and it will be placed if",
+            "&da block got hit. Entities who got hit",
+            "&dwill be set on fire for 4 seconds"
     );
 
     public static final SlimefunItemStack FN_JUKEBOX_I = new SlimefunItemStack(

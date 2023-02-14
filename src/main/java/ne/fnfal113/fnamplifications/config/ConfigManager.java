@@ -1,6 +1,11 @@
 package ne.fnfal113.fnamplifications.config;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
+import com.google.gson.JsonParser;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.SneakyThrows;
 import ne.fnfal113.fnamplifications.FNAmplifications;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -8,118 +13,100 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Serves as the main config manager for FN Amplifications
- * it can set and retrieve values or create a new yaml config file
+ * Main config manager class for FN Amplifications
  * @author FN_FAL113
  */
+@NoArgsConstructor
 public class ConfigManager {
 
-    private File customConfigFile;
-    private FileConfiguration customConfig;
-
     @Getter
-    private final Map<String, Integer> integerValues = new HashMap<>();
-    @Getter
-    private final Map<String, Boolean> booleanValues = new HashMap<>();
-
-    public ConfigManager(){}
+    private final Map<String, FileConfiguration> fileConfigurationMap = new HashMap<>();
 
     /**
-     * id and val is stored in a map for later retrieval
-     * @param itemNameSection the string that will be used as the section for the settings
-     * @param settings the string that will be used as a key for the itemNameSection
-     * @param bool the boolean value that will be used by the key or settings
-     * @param fileName the string that will be assigned as the file name
+     *
+     * @param <T> this method uses generics for parameter 'val'
+     * @param itemNameSection the config section that will be created if not exist
+     * @param settings the settings that will be created or added to section if not exist
+     * @param val generic value for the settings
+     * @param fileName the name of the config file
      */
-    public void setBooleanValues(String itemNameSection, String settings, boolean bool, String fileName) throws IOException {
-        if(createCustomConfig(fileName)) {
-            if(!getCustomConfig().isConfigurationSection(itemNameSection)) {
-                getCustomConfig().createSection(itemNameSection).set(settings, bool);
-            } else if(getCustomConfig().isConfigurationSection(itemNameSection)) {
-                if(!getCustomConfig().getConfigurationSection(itemNameSection).getKeys(false).contains(settings)){
-                    getCustomConfig().getConfigurationSection(itemNameSection).set(settings, bool);
-                }
-            }
-            getCustomConfig().save(customConfigFile);
-            boolean value = getCustomConfig().getConfigurationSection(itemNameSection).getBoolean(settings, false);
-            this.booleanValues.put(itemNameSection + "." + settings, value);
-        }
-    }
+    public <T> void initializeConfig(String itemNameSection, String settings, T val, String fileName)  {
+        FileConfiguration customConfig = getCustomConfig(fileName);
 
-    /**
-     * id and val is stored in a map for later retrieval
-     * @param itemNameSection the string that will be used as the section for the settings
-     * @param settings the string that will be used as a key for the itemNameSection
-     * @param val the integer value that will be used by the key or settings
-     * @param fileName the string that will be assigned as the file name
-     */
-    public void setIntegerValues(String itemNameSection, String settings, Integer val, String fileName) throws IOException {
-        if(createCustomConfig(fileName)) {
-            if(!getCustomConfig().isConfigurationSection(itemNameSection)) {
-                getCustomConfig().createSection(itemNameSection).set(settings, val);
-            } else if(getCustomConfig().isConfigurationSection(itemNameSection)) {
-                if(!getCustomConfig().getConfigurationSection(itemNameSection).getKeys(false).contains(settings)){
-                    getCustomConfig().getConfigurationSection(itemNameSection).set(settings, val);
-                }
+        try{
+            // skip creating existing config sections and settings if necessary to prevent being overridden
+            if (!customConfig.isConfigurationSection(itemNameSection)) {
+                // create a config section if not exist
+                customConfig.createSection(itemNameSection).set(settings, val);
+                // save only for new section or setting
+                customConfig.save(new File(FNAmplifications.getInstance().getDataFolder(), fileName + ".yml"));
+            } else if (!customConfig.getConfigurationSection(itemNameSection).contains(settings)) {
+                // create settings if config section exist
+                customConfig.getConfigurationSection(itemNameSection).set(settings, val);
+                // save only for new section or setting
+                customConfig.save(new File(FNAmplifications.getInstance().getDataFolder(), fileName + ".yml"));
             }
-            getCustomConfig().save(customConfigFile);
-            int value = getCustomConfig().getConfigurationSection(itemNameSection).getInt(settings, 0);
-            this.integerValues.put(itemNameSection + "." + settings, value);
+        } catch (IOException e){
+            e.printStackTrace();
         }
     }
 
     /**
      *
-     * @param fileName this will be used as the file name
-     * @return true if the IO operation has no errors and successfully created or loaded the config file
+     * @param jsonName the name of the json file that will be saved
      */
-    private boolean createCustomConfig(String fileName) {
-        customConfigFile = new File(FNAmplifications.getInstance().getDataFolder(),  fileName + ".yml");
-        if (!customConfigFile.exists()) {
-            customConfigFile.getParentFile().mkdirs();
-            FNAmplifications.getInstance().saveResource(fileName + ".yml", false);
+    @SneakyThrows
+    public JsonObject loadJson(String jsonName) {
+        try {
+            // get the json in the resource folder as input stream
+            // and deserialize the contents to the temporary file line by line
+            InputStream resource = FNAmplifications.class.getResourceAsStream("/json/" + jsonName + ".json");
+
+            JsonParser parser = new JsonParser();
+            return parser.parse(new InputStreamReader(resource)).getAsJsonObject();
+        } catch (JsonParseException | NullPointerException e) {
+            e.printStackTrace();
+            return new JsonObject();
+        }
+    }
+
+    /**
+     * @param fileName the config file name
+     * @return the loaded config file
+     */
+    public FileConfiguration getCustomConfig(String fileName) {
+        // if a custom config exist in the map with the given fileName key then re-use it
+        if(getFileConfigurationMap().containsKey(fileName)){
+            return getFileConfigurationMap().get(fileName);
         }
 
-        customConfig = new YamlConfiguration();
+        File customConfigFile = new File(FNAmplifications.getInstance().getDataFolder(), fileName + ".yml");
+        FileConfiguration customConfig = new YamlConfiguration();
+
         try {
+            if (!customConfigFile.exists()) {
+                customConfigFile.getParentFile().mkdirs();
+                FNAmplifications.getInstance().saveResource(fileName + ".yml", false);
+            }
+
             customConfig.load(customConfigFile);
-            return true;
+
+            // cache custom config object instance
+            getFileConfigurationMap().put(fileName, customConfig);
+
+            return customConfig;
         } catch (IOException | InvalidConfigurationException e) {
             e.printStackTrace();
-            return false;
+
+            return customConfig;
         }
-    }
 
-    /**
-     *
-     * @return the config file from the current instance
-     */
-    public FileConfiguration getCustomConfig() {
-        return this.customConfig;
-    }
-
-    /**
-     *
-     * @param itemSection the config section
-     * @param setting the config section key
-     * @return the assigned integer value from the given section and key
-     */
-    public int getValueById(String itemSection, String setting){
-        return getIntegerValues().get(itemSection + "." + setting);
-    }
-
-    /**
-     *
-     * @param itemSection the config section
-     * @param setting the config section key
-     * @return the assigned boolean value from the given section and key
-     */
-    public boolean getBoolById(String itemSection, String setting){
-        return getBooleanValues().get(itemSection + "." + setting);
     }
 
 }

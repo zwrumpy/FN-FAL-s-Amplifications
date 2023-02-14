@@ -10,6 +10,7 @@ import io.github.thebusybiscuit.slimefun4.utils.SlimefunUtils;
 import ne.fnfal113.fnamplifications.FNAmplifications;
 import ne.fnfal113.fnamplifications.gems.handlers.GemUpgrade;
 import ne.fnfal113.fnamplifications.items.FNAmpItems;
+import ne.fnfal113.fnamplifications.utils.Keys;
 import ne.fnfal113.fnamplifications.utils.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.Effect;
@@ -33,7 +34,7 @@ import java.util.Objects;
 
 public class FnGemUpgrader extends MultiBlockMachine {
 
-    private final int[] slot = {0, 2, 6, 8};
+    private final int[] slot = {0, 2, 4, 6, 8};
     private final int[] blankSlots = {1, 3, 5, 7};
 
     public static final RecipeType RECIPE_TYPE = new RecipeType(
@@ -61,7 +62,7 @@ public class FnGemUpgrader extends MultiBlockMachine {
             Dispenser disp = (Dispenser) state;
             Inventory inv = disp.getInventory();
 
-            if(inv.getContents()[0] != null) {
+            if(inv.getContents()[0] != null && inv.getContents()[4] != null) {
                 if (canCraft(inv, inv.getContents()[0].clone(), p)) {
                     String id = Objects.requireNonNull(SlimefunItem.getByItem(inv.getContents()[0])).getId();
                     ItemStack output = Objects.requireNonNull(inv.getItem(0)).clone();
@@ -87,16 +88,15 @@ public class FnGemUpgrader extends MultiBlockMachine {
             }
         }
 
-        if(inv.getContents()[4] == null){
-
-            return false;
-        }
-
         if(!SlimefunUtils.isItemSimilar(inv.getContents()[4], FNAmpItems.FN_GEM_FINE_JASPER_CRAFTING, true, false)){
             return false;
         }
 
         for (int i : slot) {
+            if(i == 4){
+                continue;
+            }
+
             if(SlimefunItem.getByItem(gem) instanceof GemUpgrade) {
                 ItemStack itemStack = inv.getContents()[i];
                 SlimefunItem sfItem = SlimefunItem.getByItem(itemStack);
@@ -141,8 +141,8 @@ public class FnGemUpgrader extends MultiBlockMachine {
     }
 
     public void craftItem(Inventory inv, Block b){
-        for (int j = 0; j < 9; j++) {
-            ItemStack item = inv.getContents()[j];
+        for (int i : slot) {
+            ItemStack item = inv.getContents()[i];
 
             if(item != null && item.getType() != Material.AIR) {
                 ItemUtils.consumeItem(item, 1, true);
@@ -179,7 +179,7 @@ public class FnGemUpgrader extends MultiBlockMachine {
     public ItemStack setOutput(ItemStack output, String id){
         ItemMeta meta = output.getItemMeta();
         PersistentDataContainer pdc = meta.getPersistentDataContainer();
-        NamespacedKey key = new NamespacedKey(FNAmplifications.getInstance(), id + "_gem_tier");
+        NamespacedKey key = Keys.createKey(id + "_gem_tier");
         int tier = pdc.getOrDefault(key, PersistentDataType.INTEGER, 4);
 
         pdc.set(key, PersistentDataType.INTEGER, tier - 1);
@@ -207,15 +207,15 @@ public class FnGemUpgrader extends MultiBlockMachine {
     Inventory createVirtualInventory(@Nonnull Inventory inv) {
         Inventory fakeInv = Bukkit.createInventory(null, 9, "Fake Inventory");
 
-        for (int j = 0; j < inv.getContents().length; j++) {
-            ItemStack stack = inv.getContents()[j];
+        for (int i : slot) {
+            ItemStack stack = inv.getContents()[i];
 
             if (stack != null) {
                 stack = stack.clone();
                 ItemUtils.consumeItem(stack, true);
             }
 
-            fakeInv.setItem(j, stack);
+            fakeInv.setItem(i, stack);
         }
 
         return fakeInv;
