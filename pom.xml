@@ -6,16 +6,18 @@
 
     <groupId>ne.fnfal113</groupId>
     <artifactId>FNAmplifications</artifactId>
-    <version>Unoffical-4.0.2</version>
+    <version>Unoffical-4.1.4</version>
     <packaging>jar</packaging>
 
     <name>FNAmplifications</name>
 
-    <description>Adds different kind of items in-game! Take part on exploring FN's offerings!</description>
+    <description>Adds different kind of items in-game from machines, utilities to pvp related items! Take part on exploring FN's offering!</description>
+    
     <properties>
         <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
+    
     <url>https://github.com/FN-FAL113</url>
 
     <build>
@@ -44,10 +46,11 @@
                     <target>${java.version}</target>
                 </configuration>
             </plugin>
+            
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>3.2.4</version>
+                <version>3.5.1</version>
                 <executions>
                     <execution>
                         <phase>package</phase>
@@ -56,37 +59,44 @@
                         </goals>
                         <configuration>
                             <createDependencyReducedPom>false</createDependencyReducedPom>
+                            <minimizeJar>true</minimizeJar>
                         </configuration>
                     </execution>
                 </executions>
                 <configuration>
+                    <!-- shaded packages -->
                     <relocations>
                         <relocation>
-                        <pattern>org.bstats</pattern>
-                        <shadedPattern>ne.fnfal113.fnamplifications.bstats</shadedPattern>
+                            <pattern>org.bstats</pattern>
+                            <shadedPattern>ne.fnfal113.fnamplifications.bstats</shadedPattern>
                         </relocation>
+
                         <relocation>
-                            <pattern>dev.j3fftw.extrautils</pattern>
-                            <shadedPattern>ne.fnfal113.fnamplifications.ExtraUtils</shadedPattern>
+                            <pattern>io.github.bakedlibs.dough.updater</pattern>
+                            <shadedPattern>ne.fnfal113.fnamplifications.dough.updater</shadedPattern>
+                        </relocation>
+                        <!-- a transitive dependency, necessary for dough-updater -->
+                        <relocation>
+                            <pattern>io.github.bakedlibs.dough.versions</pattern>
+                            <shadedPattern>ne.fnfal113.fnamplifications.dough.versions</shadedPattern>
                         </relocation>
                     </relocations>
                 </configuration>
             </plugin>
         </plugins>
-
     </build>
 
     <repositories>
-
         <repository>
             <id>jitpack.io</id>
             <url>https://jitpack.io</url>
         </repository>
-
+        
         <repository>
             <id>spigotmc-repo</id>
             <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
         </repository>
+
         <repository>
             <id>sonatype</id>
             <url>https://oss.sonatype.org/content/groups/public/</url>
@@ -109,6 +119,20 @@
         </dependency>
 
         <dependency>
+            <groupId>com.github.baked-libs.dough</groupId>
+            <artifactId>dough-updater</artifactId>
+            <version>4b28bd408e</version>
+             <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.baked-libs.dough</groupId>
+            <artifactId>dough-common</artifactId>
+            <version>4b28bd408e</version>
+             <scope>compile</scope>
+        </dependency>
+
+        <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>1.18.24</version>
@@ -123,30 +147,10 @@
         </dependency>
 
         <dependency>
-            <groupId>com.github.slimefun-addon-community</groupId>
-            <artifactId>extrautils</artifactId>
-            <version>73e76ac06c</version>
-        </dependency>
-
-        <dependency>
             <groupId>org.bstats</groupId>
             <artifactId>bstats-bukkit</artifactId>
             <version>3.0.0</version>
             <scope>compile</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>com.github.Slimefun-Addon-Community</groupId>
-            <artifactId>LiteXpansion</artifactId>
-            <version>13eea12c8f</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>com.github.Sefiraat</groupId>
-            <artifactId>SMG</artifactId>
-            <version>cce3ce31e7</version>
-            <scope>provided</scope>
         </dependency>
 
         <dependency>

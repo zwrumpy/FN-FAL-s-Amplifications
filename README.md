@@ -1,4 +1,12 @@
 # :part_alternation_mark: FN Amplifications
+
+<div align="center">
+
+![bStats Servers](https://img.shields.io/bstats/servers/13219)
+![bStats Players](https://img.shields.io/bstats/players/13219)
+
+</div>
+
 A slimefun addon that adds different types of items and more content for your server! From solar panels, machines, block breakers, gears, staffs and more!
 More awaits ingame for the players to try and craft for themselves. It pars with InfinityXpansion and LiteXpansion level of difficulty in terms
 of crafting. Come and explore FN's Amplifications! 
@@ -27,8 +35,7 @@ Addon supports 1.16.x, 1.17.x, 1.18.x, 1.19.x, and 1.20.x minecraft versions
 - **and more coming anytime soon!**
 
 ## :arrow_down: Download from build page with auto updates
-### [Download Official Jar](https://thebusybiscuit.github.io/builds/FN-FAL113/FN-FAL-s-Amplifications/main)
-[![Build Status](https://thebusybiscuit.github.io/builds/FN-FAL113/FN-FAL-s-Amplifications/main/badge.svg)](https://thebusybiscuit.github.io/builds/FN-FAL113/FN-FAL-s-Amplifications/main)
+### [Download Official Jar](https://blob.build/project/FNAmplifications)
 
 ## ⏯️ Tutorial by Boomer_1 covering this addon
 More has changed since this video was released meaning more items and content since the past few months! 
@@ -41,7 +48,7 @@ Each major category has its own configurable settings.
 
 You can change them if you think they need balancing or for several reasons 
 
-### :running: Head to my addon channel at SF Addon Community Server for feedbacks 
+### :running: Head over to SF Addon Community Server for feedbacks 
 <p>
   <a href="https://discord.gg/slimefun">
     <img src="https://discordapp.com/api/guilds/565557184348422174/widget.png?style=banner3" alt="Discord Invite"/>
@@ -51,7 +58,14 @@ You can change them if you think they need balancing or for several reasons
   </a>
 </p>
 
+## 💖 Support the Project/Dev
+I develop stuff for free with dedication and hard work. Sharing this project with fellow minecraft gamers/server owners or giving it a star is a huge sign of appreciation!</br>
+a donation button (currently using parent's paypal due to my pending account requirements).<br/>
+<a href="https://www.paypal.com/paypalme/ameliaOrbeta" target=_blank>
+  <img src="https://raw.githubusercontent.com/stefan-niedermann/paypal-donate-button/master/paypal-donate-button.png" alt="Donate with PayPal" width="40%" />
+</a>
+
 ## :label: Credits
-Waleks for  SMG based generators<br>
-Big credits to minecraft-heads for the head textures used by this addon:<br>
-https://minecraft-heads.com/
+Waleks for SMG based generators<br>
+Minecraft-Heads for the head textures used by the addon:<br>
+[Visit MC Heads Site](https://minecraft-heads.com/)
